@@ -20,6 +20,7 @@ def onClosing():
 def action1():
     print('google')
     t.track_page_view('www.google.com')
+    t.button_click()
     webbrowser.open('https://www.google.com',new=1)
 
 def action2():
