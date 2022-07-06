@@ -5,6 +5,7 @@ import tkinter as tk
 import sys
 from tkinter import * 
 import webbrowser
+from snowplow_tracker import SelfDescribingJson
 
 # use docker run -p 9090:9090 snowplow/snowplow-micro:1.3.1
 
@@ -18,9 +19,18 @@ def onClosing():
         sys.exit()
 
 def action1():
+    button_click_json = SelfDescribingJson(
+        "iglu:com.myvendor/button_click/jsonschema/1-0-0",
+        {
+            "button_id": "google_button",
+            "url": "https://www.google.com",
+            "type": "direct_link"
+        }
+    )
+    t.track_self_describing_event(button_click_json)
+
     print('google')
     t.track_page_view('www.google.com')
-    t.button_click()
     webbrowser.open('https://www.google.com',new=1)
 
 def action2():
