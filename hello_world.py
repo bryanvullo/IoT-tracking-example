@@ -27,14 +27,14 @@ def action1():
         "iglu:com.myvendor/button_click/jsonschema/1-0-0",
         {
             "button_id": "google_button",
-            "url": "https://www.google.com",
+            "url": "www.google.com",
             "type": "direct_link"
         }
     ))
 
     print('google')
     t.track_page_view('www.google.com')
-    webbrowser.open('https://www.google.com',new=1)
+    webbrowser.open('https://www.google.com', new=1)
 
 def action2():
     print('snowplow')
