@@ -22,30 +22,72 @@ def onClosing():
         sys.exit()
 
 def action1():
-    t.track_self_describing_event(SelfDescribingJson(
-        # "iglu:Micro/iglu-client-embedded/schemas/com.myvendor/button_click/jsonschema/1-0-0",
-        "iglu:com.myvendor/button_click/jsonschema/1-0-0",
+    t.track_self_describing_event(
+        # event
+        SelfDescribingJson("iglu:com.myvendor/button_click/jsonschema/1-0-0",
         {
             "button_id": "google_button",
             "url": "www.google.com",
             "type": "direct_link"
         }
-    ))
+    ),
+    [   # context
+        SelfDescribingJson("iglu:com.myvendor/user/jsonschema/1-0-0",
+        {
+            "user_id": "Vul7",
+            "first_name": "Bryan",
+            "last_name": "Vullo",
+            "email": "bryan@snowplowanalytics.com"
+        })
+    ])
 
     print('google')
-    t.track_page_view('www.google.com')
     webbrowser.open('https://www.google.com', new=1)
 
 def action2():
+    t.track_self_describing_event(SelfDescribingJson(
+        "iglu:com.myvendor/button_click/jsonschema/1-0-0",
+        {
+            "button_id": "snowplow_button",
+            "url": "www.snowplowanalytics.com",
+            "type": "direct_link"
+        }
+    ),
+    [   # context
+        SelfDescribingJson("iglu:com.myvendor/user/jsonschema/1-0-0",
+        {
+            "user_id": "Vul7",
+            "first_name": "Bryan",
+            "last_name": "Vullo",
+            "email": "bryan@snowplowanalytics.com"
+        })
+    ])
+
     print('snowplow')
-    t.track_page_view('www.snowplow.com')
     webbrowser.open('https://www.snowplowanalytics.com',new=1)
 
 def action3(url):
-    url = 'https://'+url
+    t.track_self_describing_event(SelfDescribingJson(
+        "iglu:com.myvendor/button_click/jsonschema/1-0-0",
+        {
+            "button_id": "search_button",
+            "url": url,
+            "type": "search"
+        }
+    ),
+    [   # context
+        SelfDescribingJson("iglu:com.myvendor/user/jsonschema/1-0-0",
+        {
+            "user_id": "Vul7",
+            "first_name": "Bryan",
+            "last_name": "Vullo",
+            "email": "bryan@snowplowanalytics.com"
+        })
+    ])
+
+    newurl = 'https://'+url
     print('other')
-    t.track_page_view(url)
-    webbrowser.open(url,new=1)
+    webbrowser.open(newurl,new=1)
 
 root = Tk()
 root.title('website loader')

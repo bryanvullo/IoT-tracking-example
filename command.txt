@@ -1,5 +1,7 @@
-cd
+    // first run this to get to the correct directory
+cd Documents/GitHub/snowplow
 
+    // then run this command to run docker
 docker run \
   --mount type=bind,source=$(pwd)/Micro,destination=/config \
   -p 9090:9090 \
