@@ -17,6 +17,6 @@
     },
     "additionalProperties": false,
     "required": [
-    "satifcation_rating"
+    "satisfaction_rating"
     ]
 }
