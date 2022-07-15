@@ -1,0 +1,42 @@
+{
+    "$schema": "http://iglucentral.com/schemas/com.snowplowanalytics.self-desc/schema/jsonschema/1-0-0#",
+    "description": "Schema for weather conditions",
+    "self": {
+        "vendor": "com.myvendor",
+        "name": "weather",
+        "format": "jsonschema",
+        "version": "1-0-0"
+    },
+    "type": "object",
+
+    "properties": {
+        "city": {
+            "type": "string",
+            "maxLength": 128
+    },
+
+        "temperature_celsius": {
+            "type": "number",
+            "maximum": 100
+    },
+        "windspeed": { //knots, nautical mile/h = 1.15 mph
+            "type": "number"
+        },
+
+        "humidity": { //percentage
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+        },
+
+        "conditions": { //sunny, clear, raining etc
+            "type": "string",
+            "maxLength": 128
+        }
+        
+    },
+    "additionalProperties": false,
+    "required": [
+    "conditions","temperature_celsius","windspeed"
+    ]
+}

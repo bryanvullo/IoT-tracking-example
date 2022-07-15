@@ -85,7 +85,7 @@ def action3(url):
         })
     ])
 
-    newurl = 'https://'+url
+    newurl = 'https://www.'+url
     print('other')
     webbrowser.open(newurl,new=1)
 
