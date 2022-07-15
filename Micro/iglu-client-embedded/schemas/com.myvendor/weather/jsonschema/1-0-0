@@ -19,17 +19,17 @@
             "type": "number",
             "maximum": 100
     },
-        "windspeed": { //knots, nautical mile/h = 1.15 mph
+        "windspeed": { 
             "type": "number"
         },
 
-        "humidity": { //percentage
+        "humidity": {
             "type": "number",
             "minimum": 0,
             "maximum": 100
         },
 
-        "conditions": { //sunny, clear, raining etc
+        "conditions": { 
             "type": "string",
             "maxLength": 128
         }
