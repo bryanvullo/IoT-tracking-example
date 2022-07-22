@@ -16,6 +16,16 @@ e = Emitter('localhost:9090') #some endpoint
 t = Tracker( e,
             app_id="Bryan's App")
 
+
+def track_satisfaction(rating):
+    t.track_self_describing_event(
+        # event
+        SelfDescribingJson("iglu:com.myvendor/satisfaction/jsonschema/1-0-0",
+        {
+            "satisfaction_rating": rating
+        }
+    ))
+
 def onClosing():
     if messagebox.askyesno('Quit', 'Would you like to close the menu?')==1:
         root.destroy()

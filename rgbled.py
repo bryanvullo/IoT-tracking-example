@@ -1,16 +1,6 @@
-# importing snowplow
-import snowplow_tracker
-from snowplow_tracker import Tracker, Emitter
-from snowplow_tracker import SelfDescribingJson
-
 # importing device modules
 from machine import Pin, PWM
 import time
-
-# snowplow initialisation
-e = Emitter('localhost:9090') #some endpoint
-t = Tracker( e,
-            app_id="Bryan's App")
 
 # device initialisation
 redpin = PWM(Pin(13))
@@ -25,15 +15,6 @@ bluepin.freq(freq_num)
 redbutton = Pin(7, Pin.IN, Pin.PULL_UP)
 yellowbutton = Pin(8, Pin.IN, Pin.PULL_UP)
 greenbutton = Pin(9, Pin.IN, Pin.PULL_UP)
-
-def track_satisfaction(rating):
-    t.track_self_describing_event(
-        # event
-        SelfDescribingJson("iglu:com.myvendor/satisfaction/jsonschema/1-0-0",
-        {
-            "satisfaction_rating": rating
-        }
-    ))
 
 def setRed():
     redpin.duty_u16(0)
@@ -56,7 +37,6 @@ def setOff():
     bluepin.duty_u16(65535)
 
 def redButtonClick():
-    track_satisfaction("Bad")
     setRed()
     time.sleep(0.5)
     setOff()
@@ -71,7 +51,6 @@ def redButtonClick():
     time.sleep(0.5)
 
 def yellowButtonClick():
-    track_satisfaction("Average")
     setYellow()
     time.sleep(0.5)
     setOff()
@@ -86,7 +65,6 @@ def yellowButtonClick():
     time.sleep(0.5)
 
 def greenButtonClick():
-    track_satisfaction("Good")
     setGreen()
     time.sleep(0.5)
     setOff()
