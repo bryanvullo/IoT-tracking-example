@@ -2,6 +2,8 @@
 from machine import Pin, PWM
 import time
 import dht11
+import urequests as requests
+import wifi
 
     # device initialisation
 # RGB LED 
@@ -24,6 +26,10 @@ time.sleep(1)
 redbutton = Pin(7, Pin.IN, Pin.PULL_UP)
 yellowbutton = Pin(8, Pin.IN, Pin.PULL_UP)
 greenbutton = Pin(9, Pin.IN, Pin.PULL_UP)
+
+    # collecter information
+# ngrok url
+ngrok = "0e9f-2a00-23c6-1a96-301-cccb-13fc-81bf-9893.eu.ngrok.io"
 
 def setRed():
     redpin.duty_u16(0)
@@ -95,20 +101,33 @@ def sensorRead():
     temperature = dht.temperature()
     humidity = dht.humidity()
     print("temperature: %0.2fC  humidity: %0.2f"%(temperature, humidity) + "%")
+    return temperature, humidity
+    
+def event(satisfaction, temperature, humidity):
+    requests.get(url="http://"+ngrok+"/com.snowplowanalytics.iglu/v1?schema=iglu%3Acom.myvendor%2Fsatisfaction%2Fjsonschema%2F1-0-0&satisfaction="+satisfaction+"&temperature="+str(temperature)+"&humidity="+str(humidity))
+    
+    # http://e4de-2a00-23c6-1a96-301-cccb-13fc-81bf-9893.eu.ngrok.io/com.snowplowanalytics.iglu/v1?
+    # schema=iglu%3Acom.myvendor%2Fsatisfaction%2Fjsonschema%2F1-0-0
+    # &satisfaction=satifaction
+    # &temperature=temperature
+    # &humidity=humidity
     
 
 while True:
     setOff()
     
     if not redbutton.value():
-        sensorRead()
+        temperature, humidity = sensorRead()
         redButtonClick()
+        event('bad', temperature, humidity)
         
     elif not yellowbutton.value():
-        sensorRead()
+        temperature, humidity = sensorRead()
         yellowButtonClick()
+        event('average', temperature, humidity)
         
     elif not greenbutton.value():
-        sensorRead()
+        temperature, humidity = sensorRead()
         greenButtonClick()
+        event('good', temperature, humidity)
         

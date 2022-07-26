@@ -13,6 +13,13 @@
         "satisfaction_rating": {
             "type": "string",
             "maxLength": 128
+    },
+        "temperature": {
+            "type": "number",
+            "maximum": 100
+    },
+        "sound": {
+            "type": "number"
     }
     },
     "additionalProperties": false,
