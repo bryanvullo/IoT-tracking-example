@@ -18,8 +18,9 @@
             "type": "number",
             "maximum": 100
     },
-        "sound": {
-            "type": "number"
+        "humidity": {
+            "type": "number",
+            "maximum": 100
     }
     },
     "additionalProperties": false,
