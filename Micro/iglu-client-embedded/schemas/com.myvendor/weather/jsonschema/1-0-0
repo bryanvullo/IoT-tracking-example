@@ -11,25 +11,33 @@
 
     "properties": {
         "city": {
-            "type": "string",
+            "description": "takes the city location of the event",
+            "type": ["string", "null"],
             "maxLength": 128
     },
 
         "temperature_celsius": {
+            "description": "takes the temperature of the area",
             "type": "number",
-            "maximum": 100
+            "maximum": 100,
+            "minimum": -20
     },
         "windspeed": { 
-            "type": "number"
+            "description": "takes the average windspeed of the area",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 70
         },
 
         "humidity": {
-            "type": "number",
+            "description": "takes the average humidy of the area",
+            "type": ["number", "null"],
             "minimum": 0,
             "maximum": 100
         },
 
         "conditions": { 
+            "description": "takes the weather conditions such as sunny, raining, etc",
             "type": "string",
             "maxLength": 128
         }

@@ -5,22 +5,27 @@
         "vendor": "com.myvendor",
         "name": "satisfaction",
         "format": "jsonschema",
-        "version": "1-0-0"
+        "version": "1-0-1"
     },
     "type": "object",
 
     "properties": {
         "satisfaction_rating": {
+            "description": "a rating of satisfaction taken from the buttons",
             "type": "string",
             "maxLength": 128
     },
         "temperature": {
-            "type": "number",
-            "maximum": 100
+            "description": "takes the temperature reading from a sensor",
+            "type": ["number", "null"],
+            "maximum": 100,
+            "minimum": -20
     },
         "humidity": {
-            "type": "number",
-            "maximum": 100
+            "description": "takes the humidity reading from a sensor",
+            "type": ["number", "null"],
+            "maximum": 100,
+            "minimum": 0
     }
     },
     "additionalProperties": false,

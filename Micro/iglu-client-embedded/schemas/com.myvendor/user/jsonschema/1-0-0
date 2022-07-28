@@ -11,20 +11,24 @@
 
     "properties": {
         "user_id": {
+            "description": "takes a user id such as a username",
             "type": "string",
             "maxLength": 128
     },
 
         "first_name": {
-            "type": "string",
+            "description": "takes the first name of the user",
+            "type": ["string","null"],
             "maxLength": 128
     },
 
         "last_name": {
-            "type": "string",
+            "description": "takes the last name of the user",
+            "type": ["string","null"],
             "maxLength": 128
     },
         "email": {
+            "description": "takes the email of the user",
             "type": "string",
             "maxLength": 128
     }

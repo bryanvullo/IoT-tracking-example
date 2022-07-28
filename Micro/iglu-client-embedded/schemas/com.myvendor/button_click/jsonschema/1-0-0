@@ -11,17 +11,20 @@
 
     "properties": {
         "button_id": {
+            "description": "takes an identifier for the button clicked",
             "type": "string",
             "maxLength": 128
     },
 
         "url": {
+            "description": "takes the url to the website visited",
             "type": "string",
             "maxLength": 128
     },
 
         "type": {
-            "type": "string",
+            "description": "describes the type of interation",
+            "type": ["string","null"],
             "maxLength": 128
     }
     },

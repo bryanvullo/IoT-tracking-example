@@ -11,11 +11,16 @@
 
     "properties": {
         "temperature": {
+            "description": "takes the temperature reading from the sensor",
             "type": "number",
-            "maximum": 100
+            "maximum": 100,
+            "minimum": -20
     },
         "sound": {
-            "type": "number"
+            "description": "takes the sound intensity reading from the sensor, dB",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 120
     }
     },
     "additionalProperties": false,
