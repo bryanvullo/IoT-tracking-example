@@ -1,0 +1,31 @@
+{
+    "$schema": "http://iglucentral.com/schemas/com.snowplowanalytics.self-desc/schema/jsonschema/1-0-0#",
+    "description": "Schema for a user's satisfaction",
+    "self": {
+        "vendor": "com.myvendor",
+        "name": "satisfaction",
+        "format": "jsonschema",
+        "version": "1-0-0"
+    },
+    "type": "object",
+
+    "properties": {
+        "satisfaction_rating": {
+            "type": "string",
+            "maxLength": 128
+    },
+        "temperature": {
+            "type": "number",
+            "maximum": 100
+    },
+        "humidity": {
+            "type": "number",
+            "maximum": 100,
+            "minimum": 0
+    }
+    },
+    "additionalProperties": false,
+    "required": [
+    "satisfaction_rating"
+    ]
+}
