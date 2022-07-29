@@ -1,5 +1,5 @@
 # importing device modules
-from machine import Pin, PWM, RTC
+from machine import Pin, PWM
 import time
 import dht11
 import myrequests as requests
@@ -100,16 +100,46 @@ def getTime():
     t_s = t_machine + time_difference
     t_ms = t_s * 1000
     return t_ms
+
+# gets weather from API and returns data
+def getWeather(city):
+    baseURL = "http://api.openweathermap.org/data/2.5/weather?"
+    API_KEY = "ccef0e85f58e1c3617d949fd57685074"
     
+    url = baseURL + "appid=" + API_KEY + "&q=" + city
+    res = requests.get(url).json()
+    
+    city = res["name"]
+    temperature = float( res["main"]["temp"] ) - 273.15
+    windspeed = float( res["wind"]["speed"] )
+    pressure = int( res["main"]["pressure"] )
+    conditions = res["weather"][0]["description"]
+    print(city, temperature, windspeed, pressure, conditions)
+    
+    return [city, temperature, windspeed, pressure, conditions]
+    
+    
+    
+# gets the location using an API and returns the city
+def getLocation():
+    API_KEY = "b7f4bf8ea2406b68a8a39ad45ebfbc6e"
+    baseURL = "http://api.ipstack.com/check?access_key="
+    url = baseURL + API_KEY
+    res = requests.get(url).json()
+    return res["city"]
+        
 
 # function to send a POST request to the snowplow collector
 def event(satisfaction, temperature, humidity):
-    time = str(getTime())
+    time = getTime() # add time to event
+    city = getLocation()
+    weather = getWeather(city)
+    
     post_data = ujson.dumps({"satisfaction_rating":satisfaction, "temperature":temperature, "humidity":humidity})
-    request_url = "http://"+collector+"/com.snowplowanalytics.iglu/v1?schema=iglu%3Acom.myvendor%2Fsatisfaction%2Fjsonschema%2F1-0-0&aid=satisfaction-meter&p=iot&stm="+time
+    request_url = "http://"+collector+"/com.snowplowanalytics.iglu/v1?schema=iglu%3Acom.myvendor%2Fsatisfaction%2Fjsonschema%2F1-0-1&aid=satisfaction-meter&p=iot"
     res = requests.post(request_url, headers = {'content-type': 'application/json'}, data = post_data)
     print(res.status_code)
-    
+
 # runs once
 setOff()
 time_difference = getTimeDifference()
