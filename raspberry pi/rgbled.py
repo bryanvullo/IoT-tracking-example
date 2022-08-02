@@ -112,11 +112,12 @@ def getWeather(city):
     city = res["name"]
     temperature = float( res["main"]["temp"] ) - 273.15
     windspeed = float( res["wind"]["speed"] )
+    humidity = int( res["main"]["humidity"] )
     pressure = int( res["main"]["pressure"] )
     conditions = res["weather"][0]["description"]
-    print(city, temperature, windspeed, pressure, conditions)
+    print(city, temperature, windspeed, humidity, pressure, conditions)
     
-    return [city, temperature, windspeed, pressure, conditions]
+    return [city, temperature, windspeed, humidity, pressure, conditions]
     
     
     
@@ -139,6 +140,63 @@ def event(satisfaction, temperature, humidity):
     request_url = "http://"+collector+"/com.snowplowanalytics.iglu/v1?schema=iglu%3Acom.myvendor%2Fsatisfaction%2Fjsonschema%2F1-0-1&aid=satisfaction-meter&p=iot"
     res = requests.post(request_url, headers = {'content-type': 'application/json'}, data = post_data)
     print(res.status_code)
+    
+def updatedEvent(satisfaction, temperature, humidity):
+    time = getTime() # add time to event
+    city = getLocation()
+    weather = getWeather(city)
+    
+    post_data = ujson.dumps({
+      "schema": "iglu:com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-4",
+      "data": [
+        {
+          "e": "ue", # ue = Self Describing Event
+          "tna": "snplow5", # Tracker Name
+          "aid": "satisfaction-meter", # Application ID
+          "p": "iot", # Platform
+          "dtm": "1659362652911", # Event Created Timestamp
+          "stm": time, # Sent Timestamp
+          "ue_pr": ujson.dumps({
+            "schema": "iglu:com.snowplowanalytics.snowplow/unstruct_event/jsonschema/1-0-0", # Do not change
+            "data": {
+              "schema": "iglu:com.myvendor/satisfaction/jsonschema/1-0-2", # Example, update this
+              "data": {
+                "satisfaction": satisfaction # Example, update this
+              }
+            }
+          }),
+          "co": ujson.dumps({
+            {
+              "schema": "iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-0", # Do not change
+              "data": [
+                {
+                  "schema": "iglu:com.myvendor/weather/jsonschema/1-0-1", # Example, update this
+                  "data": { 
+                    "city": weather[0], # Example, update this
+                    "temperature_celsius": weather[1],
+                    "windspeed": weather[2],
+                    "humidity": weather[3],
+                    "pressure": weather[4],
+                    "conditions": weather[5]
+                  }
+                },
+                { 
+                  "schema": "iglu:com.myvendor/sensors/jsonschema/1-0-2", # CHANGE ME!
+                  "data": { 
+                    "temperature": temperature,
+                    "humidity": humidity
+                  }
+                }
+              ]
+            }
+          })
+        }
+      ]
+    })
+    request_url = collector+'/com.snowplowanalytics.snowplow/tp2'
+    ​
+    res = requests.post(request_url, headers = {'content-type': 'application/json'}, data = post_data)
+    print(res)
 
 # runs once
 setOff()
@@ -150,15 +208,15 @@ while True:
     if not redbutton.value():
         temperature, humidity = sensorRead()
         redButtonClick()
-        event('bad', temperature, humidity)
+        updatedEvent('bad', temperature, humidity)
         
     elif not yellowbutton.value():
         temperature, humidity = sensorRead()
         yellowButtonClick()
-        event('average', temperature, humidity)
+        updatedEvent('average', temperature, humidity)
         
     elif not greenbutton.value():
         temperature, humidity = sensorRead()
         greenButtonClick()
-        event('good', temperature, humidity)
+        updatedEvent('good', temperature, humidity)
         

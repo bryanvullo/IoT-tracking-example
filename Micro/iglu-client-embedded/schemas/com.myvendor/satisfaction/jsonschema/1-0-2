@@ -1,0 +1,23 @@
+{
+    "$schema": "http://iglucentral.com/schemas/com.snowplowanalytics.self-desc/schema/jsonschema/1-0-0#",
+    "description": "Schema for a user's satisfaction",
+    "self": {
+        "vendor": "com.myvendor",
+        "name": "satisfaction",
+        "format": "jsonschema",
+        "version": "1-0-2"
+    },
+    "type": "object",
+
+    "properties": {
+        "satisfaction_rating": {
+            "description": "a rating of satisfaction taken from the buttons",
+            "type": "string",
+            "maxLength": 128
+    }
+    },
+    "additionalProperties": false,
+    "required": [
+    "satisfaction_rating"
+    ]
+}
