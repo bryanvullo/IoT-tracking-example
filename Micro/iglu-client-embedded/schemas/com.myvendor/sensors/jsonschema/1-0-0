@@ -1,0 +1,30 @@
+{
+    "$schema": "http://iglucentral.com/schemas/com.snowplowanalytics.self-desc/schema/jsonschema/1-0-0#",
+    "description": "Schema for sensor readings",
+    "self": {
+        "vendor": "com.myvendor",
+        "name": "sensors",
+        "format": "jsonschema",
+        "version": "1-0-0"
+    },
+    "type": "object",
+
+    "properties": {
+        "temperature": {
+            "description": "takes the temperature reading from the sensor",
+            "type": "number",
+            "maximum": 100,
+            "minimum": -20
+    },
+        "sound": {
+            "description": "takes the sound intensity reading from the sensor, dB",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 120
+    }
+    },
+    "additionalProperties": false,
+    "required": [
+    "temperature", "sound"
+    ]
+}

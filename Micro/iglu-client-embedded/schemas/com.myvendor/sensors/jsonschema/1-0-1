@@ -1,0 +1,30 @@
+{
+    "$schema": "http://iglucentral.com/schemas/com.snowplowanalytics.self-desc/schema/jsonschema/1-0-0#",
+    "description": "Schema for sensor readings",
+    "self": {
+        "vendor": "com.myvendor",
+        "name": "sensors",
+        "format": "jsonschema",
+        "version": "1-0-1"
+    },
+    "type": "object",
+
+    "properties": {
+        "temperature": {
+            "description": "takes the temperature reading from a sensor",
+            "type": ["number", "null"],
+            "maximum": 100,
+            "minimum": -20
+    },
+        "humidity": {
+            "description": "takes the humidity reading from a sensor",
+            "type": ["number", "null"],
+            "maximum": 100,
+            "minimum": 0
+    }
+    },
+    "additionalProperties": false,
+    "required": [
+    "temperature", "humidity"
+    ]
+}
