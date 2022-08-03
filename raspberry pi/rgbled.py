@@ -1,11 +1,11 @@
 # importing device modules
 from machine import Pin, PWM
 import time
+import ujson
+# importing my own modules
 import dht11
 import myrequests as requests
 import wifi
-import ujson
-
 
     # device initialisation
 # RGB LED 
@@ -78,9 +78,12 @@ def greenButtonClick():
 # function to read from sensors and return the readings
 def sensorRead():
     # temp and humidity sensor - DHT11 sensor
-    if dht.measure() == 0:
+    measurement = dht.measure()
+    while measurement == 0:
         print("DHT data error")
-        return
+        time.sleep(1)
+        measurement = dht.measure()
+        
     temperature = dht.temperature()
     humidity = dht.humidity()
     print("temperature: %0.2fC  humidity: %0.2f"%(temperature, humidity) + "%")
@@ -101,6 +104,14 @@ def getTime():
     t_ms = t_s * 1000
     return t_ms
 
+# gets the location using an API and returns the city
+def getLocation():
+    API_KEY = "b7f4bf8ea2406b68a8a39ad45ebfbc6e"
+    baseURL = "http://api.ipstack.com/check?access_key="
+    url = baseURL + API_KEY
+    res = requests.get(url).json()
+    return res["city"]# gets the location using an API and returns the city
+
 # gets weather from API and returns data
 def getWeather(city):
     baseURL = "http://api.openweathermap.org/data/2.5/weather?"
@@ -118,85 +129,58 @@ def getWeather(city):
     print(city, temperature, windspeed, humidity, pressure, conditions)
     
     return [city, temperature, windspeed, humidity, pressure, conditions]
-    
-    
-    
-# gets the location using an API and returns the city
-def getLocation():
-    API_KEY = "b7f4bf8ea2406b68a8a39ad45ebfbc6e"
-    baseURL = "http://api.ipstack.com/check?access_key="
-    url = baseURL + API_KEY
-    res = requests.get(url).json()
-    return res["city"]
-        
 
-# function to send a POST request to the snowplow collector
-def event(satisfaction, temperature, humidity):
-    time = getTime() # add time to event
-    city = getLocation()
-    weather = getWeather(city)
-    
-    post_data = ujson.dumps({"satisfaction_rating":satisfaction, "temperature":temperature, "humidity":humidity})
-    request_url = "http://"+collector+"/com.snowplowanalytics.iglu/v1?schema=iglu%3Acom.myvendor%2Fsatisfaction%2Fjsonschema%2F1-0-1&aid=satisfaction-meter&p=iot"
-    res = requests.post(request_url, headers = {'content-type': 'application/json'}, data = post_data)
-    print(res.status_code)
-    
-def updatedEvent(satisfaction, temperature, humidity):
-    time = getTime() # add time to event
-    city = getLocation()
-    weather = getWeather(city)
-    
+# function to send a POST request to the snowplow collector    
+def event(satisfaction, temperature, humidity, time, weather):
     post_data = ujson.dumps({
       "schema": "iglu:com.snowplowanalytics.snowplow/payload_data/jsonschema/1-0-4",
       "data": [
         {
-          "e": "ue", # ue = Self Describing Event
-          "tna": "snplow5", # Tracker Name
-          "aid": "satisfaction-meter", # Application ID
-          "p": "iot", # Platform
-          "dtm": "1659362652911", # Event Created Timestamp
-          "stm": time, # Sent Timestamp
+          "e": "ue", 
+          "tna": "snplow5", 
+          "tv": "upython-0.0.1",
+          "aid": "satisfaction-meter", 
+          "p": "iot", 
+          "dtm": str(time), 
+          "stm": str(time), 
           "ue_pr": ujson.dumps({
-            "schema": "iglu:com.snowplowanalytics.snowplow/unstruct_event/jsonschema/1-0-0", # Do not change
+            "schema": "iglu:com.snowplowanalytics.snowplow/unstruct_event/jsonschema/1-0-0", 
             "data": {
-              "schema": "iglu:com.myvendor/satisfaction/jsonschema/1-0-2", # Example, update this
+              "schema": "iglu:com.myvendor/satisfaction/jsonschema/1-0-2", 
               "data": {
-                "satisfaction": satisfaction # Example, update this
+                "satisfaction_rating": satisfaction 
               }
             }
           }),
           "co": ujson.dumps({
-            {
-              "schema": "iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-0", # Do not change
+              "schema": "iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-0",
               "data": [
                 {
-                  "schema": "iglu:com.myvendor/weather/jsonschema/1-0-1", # Example, update this
-                  "data": { 
-                    "city": weather[0], # Example, update this
+                    "schema": "iglu:com.myvendor/weather/jsonschema/1-0-1",
+                    "data": { 
+                    "city": weather[0],
                     "temperature_celsius": weather[1],
                     "windspeed": weather[2],
                     "humidity": weather[3],
                     "pressure": weather[4],
                     "conditions": weather[5]
-                  }
-                },
-                { 
-                  "schema": "iglu:com.myvendor/sensors/jsonschema/1-0-2", # CHANGE ME!
-                  "data": { 
+                      }
+                  },
+                {
+                    "schema": "iglu:com.myvendor/sensors/jsonschema/2-0-0", 
+                    "data": { 
                     "temperature": temperature,
                     "humidity": humidity
+                      }
                   }
-                }
               ]
-            }
-          })
+            })
         }
       ]
     })
-    request_url = collector+'/com.snowplowanalytics.snowplow/tp2'
-    ​
+    request_url = "http://"+collector+"/com.snowplowanalytics.snowplow/tp2"
     res = requests.post(request_url, headers = {'content-type': 'application/json'}, data = post_data)
-    print(res)
+    print(res.status_code)
 
 # runs once
 setOff()
@@ -206,17 +190,28 @@ time_difference = getTimeDifference()
 while True:
     
     if not redbutton.value():
-        temperature, humidity = sensorRead()
         redButtonClick()
-        updatedEvent('bad', temperature, humidity)
+        # sensor and API data collection
+        temperature, humidity = sensorRead()
+        time = getTime() 
+        city = getLocation()
+        weather = getWeather(city)
+        # send event
+        event('bad', temperature, humidity, time, weather)
         
     elif not yellowbutton.value():
-        temperature, humidity = sensorRead()
         yellowButtonClick()
-        updatedEvent('average', temperature, humidity)
+        temperature, humidity = sensorRead()
+        time = getTime() 
+        city = getLocation()
+        weather = getWeather(city)
+        event('average', temperature, humidity, time, weather)
         
     elif not greenbutton.value():
-        temperature, humidity = sensorRead()
         greenButtonClick()
-        updatedEvent('good', temperature, humidity)
+        temperature, humidity = sensorRead()
+        time = getTime() 
+        city = getLocation()
+        weather = getWeather(city)
+        event('good', temperature, humidity, time, weather)
         
