@@ -12,5 +12,5 @@ What makes Snowplow the best in terms of tracking is their unique and flexible s
 I will be using a Raspberry Pi Pico W as my Microcontroller which will connect wirelessly and send off events to my data warehouse. For more information on this project's code or build check out my full blog post here.
 
 ## Code
-```rgb.py ``` is my main file which I execute on my Raspberry Pi.
+```rgb.py``` is my main file which I execute on my Raspberry Pi.
 The other files: ```myrequest.py wifi.py dht11.py``` are used within ```rgb.py``` and need to also be stored on the Raspberry Pi.
