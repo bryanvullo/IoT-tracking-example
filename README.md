@@ -13,4 +13,4 @@ I will be using a Raspberry Pi Pico W as my Microcontroller which will connect w
 
 ## Code
 ```rgb.py``` is my main file which I execute on my Raspberry Pi.
-The other files: ```myrequest.py wifi.py dht11.py``` are used within ```rgb.py``` and need to also be stored on the Raspberry Pi.
+The other files: ```myrequest.py```, ```wifi.py```, ```dht11.py``` are used within ```rgb.py``` and need to also be stored on the Raspberry Pi.
