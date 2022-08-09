@@ -29,7 +29,7 @@ redbutton = Pin(7, Pin.IN, Pin.PULL_UP)
 yellowbutton = Pin(8, Pin.IN, Pin.PULL_UP)
 greenbutton = Pin(9, Pin.IN, Pin.PULL_UP)
 
-# ngrok url
+# collector url
 collector = "bryan-collector-lb-1831597913.eu-west-1.elb.amazonaws.com"
 
 # functions to turn RGB LED specific colors
