@@ -9,9 +9,6 @@ from tkinter import *
 import webbrowser
 import sys
 
-
-# use docker run -p 9090:9090 snowplow/snowplow-micro:1.3.1
-
 e = Emitter('localhost:9090') #some endpoint
 t = Tracker( e,
             app_id="Bryan's App")
