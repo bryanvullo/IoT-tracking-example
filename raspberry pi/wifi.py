@@ -5,8 +5,8 @@ from machine import Pin
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 
-ssid = "BTHub6-KSKG"
-pw = "AbDNRFD3TiHM"
+ssid = ""
+pw = ""
 
 wlan.connect(ssid, pw)
 
