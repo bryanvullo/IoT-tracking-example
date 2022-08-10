@@ -30,7 +30,7 @@ yellowbutton = Pin(8, Pin.IN, Pin.PULL_UP)
 greenbutton = Pin(9, Pin.IN, Pin.PULL_UP)
 
 # collector url
-collector = "bryan-collector-lb-1831597913.eu-west-1.elb.amazonaws.com"
+collector = ""
 
 # functions to turn RGB LED specific colors
 def setRed():
@@ -106,7 +106,7 @@ def getTime():
 
 # gets the location using an API and returns the city
 def getLocation():
-    API_KEY = "b7f4bf8ea2406b68a8a39ad45ebfbc6e"
+    API_KEY = ""
     baseURL = "http://api.ipstack.com/check?access_key="
     url = baseURL + API_KEY
     res = requests.get(url).json()
@@ -115,7 +115,7 @@ def getLocation():
 # gets weather from API and returns data
 def getWeather(city):
     baseURL = "http://api.openweathermap.org/data/2.5/weather?"
-    API_KEY = "ccef0e85f58e1c3617d949fd57685074"
+    API_KEY = ""
     
     url = baseURL + "appid=" + API_KEY + "&q=" + city
     res = requests.get(url).json()
