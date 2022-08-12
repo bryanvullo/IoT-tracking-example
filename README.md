@@ -10,6 +10,7 @@ The other files: ```myrequest.py```, ```wifi.py```, ```dht11.py``` are used with
 
 ## Author
 My name is Bryan and I'm a 18 year old Snowplow Intern, looking to study Computer Science at University shortly after this.
+
 This project is a proof of concept showing how you can track data from an IoT device.
 I will be using sensors and APIs to collect data. Then Snowplow will validate and send my events to my data warehouse. 
 
