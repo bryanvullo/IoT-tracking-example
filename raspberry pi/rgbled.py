@@ -30,7 +30,7 @@ yellowbutton = Pin(8, Pin.IN, Pin.PULL_UP)
 greenbutton = Pin(9, Pin.IN, Pin.PULL_UP)
 
 # collector url
-collector = "bryan-pipeline-rds-20220727213438582900000002.cbpnfeamlxtg.eu-west-1.rds.amazonaws.com"
+collector = ""
 
 # functions to turn RGB LED specific colors
 def setRed():
