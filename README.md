@@ -1,6 +1,6 @@
 # Snowplow IoT Project
 ## Project Description
-We will be using a Raspberry Pi Pico W as the Microcontroller which will connect wirelessly and send off events to a data warehouse. This project shows how Snowplow can be used with IoT devices, specifically we've made a satisfaction meter which tracks environmental data along with the events triggered by users.
+We will be using a Raspberry Pi Pico W as the Microcontroller which will connect wirelessly and Snowplow will validate and send my events to my data warehouse. This project is a proof of concept showing you how Snowplow can be used to track data from IoT devices, specifically we've made a satisfaction meter which tracks environmental data along with the events triggered by users. 
 
 For more information on this project's code or build check out the full [blog post](https://snowplowanalytics.com/blog/2022/08/12/the-missed-opportunity-of-behavioral-data-in-iot-snowplow/).
 
@@ -9,10 +9,7 @@ For more information on this project's code or build check out the full [blog po
 The other files: ```myrequest.py```, ```wifi.py```, ```dht11.py``` are used within ```rgb.py``` and need to also be stored on the Raspberry Pi.
 
 ## Author
-My name is Bryan and I'm a 18 year old Snowplow Intern, looking to study Computer Science at University shortly after this.
-
-This project is a proof of concept showing how you can track data from an IoT device.
-I will be using sensors and APIs to collect data. Then Snowplow will validate and send my events to my data warehouse. 
+My name is Bryan and I'm a 18 year old Snowplow Intern, looking to study Computer Science at University shortly after this. 
 
 ## Snowplow
 Snowplow Analytics holds the throne when it comes to tracking behavioral data; IoT devices can be a gold mine. This is because IoT devices have the capability to send lots of small events as they get interacted with, these events can then be highly enriched by sensor data, APIs and Snowplow's automatic enrichment process.
